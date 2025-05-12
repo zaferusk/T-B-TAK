@@ -73,7 +73,23 @@
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
   </style>
-  <script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBiEB9J0OIr9hPGR_NB0U13wrjA0QBF7sk",
+      authDomain: "word-machine-547d3.firebaseapp.com",
+      projectId: "word-machine-547d3",
+      storageBucket: "word-machine-547d3.appspot.com",
+      messagingSenderId: "537964257136",
+      appId: "1:537964257136:web:045c49422b46541af1b9b5",
+      measurementId: "G-2ST0PGHT6K"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
     let playerNames = ['', ''];
     let currentPlayer = 0;
 
@@ -91,6 +107,7 @@
       document.getElementById('category-section').style.display = 'block';
       document.getElementById('game-section').style.display = 'none';
     }
+
   </script>
 </head>
 <body>
