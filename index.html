@@ -7,184 +7,182 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
-      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      margin: 0;
+      padding: 0;
       font-family: 'Poppins', sans-serif;
-      color: #ffffff;
+      background: #f0f4f8;
+      color: #333;
+    }
+    header {
+      background: #4facfe;
+      background: linear-gradient(to right, #4facfe, #00f2fe);
       padding: 20px;
       text-align: center;
-      background: url('https://i.imgur.com/3ZpR9th.jpg') no-repeat center center fixed;
-      background-size: cover;
-      font-family: 'Poppins', sans-serif;
-      color: #ffffff;
-      padding: 20px;
-      text-align: center;
-      background: url('https://i.imgur.com/Qe6z8DI.jpg') no-repeat center center fixed;
-      background-size: cover;
-      font-family: 'Poppins', sans-serif;
-      color: #ffffff;
-      padding: 20px;
-      text-align: center;
+      color: #fff;
     }
-    #scoreboard, #joker-container {
-      top: 10px;
-      right: 10px;
-      background-color: #e67e22;
-      color: #ffffff;
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-      position: fixed;
-      padding: 10px 20px;
-      font-weight: bold;
-      border-radius: 8px;
-      z-index: 1000;
-    }
-    #scoreboard {
-      top: 10px;
-      left: 10px;
-      background-color: #3498db;
-      color: #ffffff;
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-      top: 10px;
-      left: 10px;
-      background-color: #ff5733;
-      color: #ffffff;
-    }
-    #joker-container {
-      top: 10px;
-      right: 10px;
-      background-color: #34495e;
-      color: #ffde59;
+    main {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 0 20px;
     }
     .section {
-      background-color: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
+      background: #fff;
       padding: 20px;
-      margin-bottom: 15px;
-      border-radius: 12px;
-      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-      background-color: rgba(50, 50, 50, 0.85);
-      padding: 20px;
-      margin-bottom: 15px;
-      border-radius: 12px;
-      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-      background-color: rgba(0, 0, 0, 0.8);
-      padding: 20px;
-      margin-bottom: 15px;
+      margin-bottom: 20px;
       border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
-    .btn {
-      background-color: #3498db;
-      color: #ffffff;
-      padding: 12px 24px;
-      font-size: 1.1em;
+    .section.hidden { display: none; }
+    input, select, button {
+      width: calc(100% - 24px);
+      padding: 10px;
+      margin: 5px 0;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background: #4facfe;
+      background: linear-gradient(to right, #4facfe, #00f2fe);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #00f2fe;
+    }
+    #scoreboard, #joker-container {
+      display: inline-block;
+      margin: 0 10px;
       font-weight: bold;
-      border: none;
-      cursor: pointer;
-      margin-top: 10px;
-      border-radius: 10px;
-      transition: background-color 0.3s, transform 0.3s;
     }
-    .btn:hover {
-      background-color: #2980b9;
-      transform: scale(1.05);
-      background-color: #ff5733;
-      color: #ffffff;
-      padding: 12px 24px;
-      font-size: 1.1em;
-      font-weight: bold;
-      border: none;
-      cursor: pointer;
-      margin-top: 10px;
-      border-radius: 10px;
-      transition: background-color 0.3s, transform 0.3s;
-    }
-    .btn:hover {
-      background-color: #c70039;
-      transform: scale(1.05);
-    }
-      background-color: #ff5733;
-      color: #ffffff;
-      padding: 10px 20px;
-      border: none;
-      cursor: pointer;
-      margin-top: 10px;
+    #game-section img {
+      max-width: 100%;
+      height: auto;
+      margin: 10px 0;
       border-radius: 8px;
-    }
-    .btn:hover {
-      background-color: #c70039;
     }
   </style>
 </head>
 <body>
+  <header>
+    <h1>Word Machine</h1>
+    <div id="scoreboard">P1: 0 | P2: 0</div>
+    <div id="joker-container">Jokers: <span id="joker-count">3</span></div>
+  </header>
+  <main>
+    <section id="start-section" class="section">
+      <h2>Enter Player Names</h2>
+      <input id="player1" placeholder="Player 1 Name" />
+      <input id="player2" placeholder="Player 2 Name" />
+      <button onclick="startGame()">Start Game</button>
+    </section>
 
-  <h1>🎯 Word Machine 🎯</h1>
+    <section id="category-section" class="section hidden">
+      <h2>Select a Category</h2>
+      <button onclick="chooseCategory('Nature')">Nature</button>
+      <button onclick="chooseCategory('Sports')">Sports</button>
+      <button onclick="chooseCategory('Animals')">Animals</button>
+    </section>
 
-  <div id="scoreboard">Player 1: 0 | Player 2: 0</div>
-  <div id="joker-container">Jokers: <span id="joker-count">3</span></div>
+    <section id="game-section" class="section hidden">
+      <h2 id="player-turn">Player's Turn</h2>
+      <div id="word-box">Word will appear here</div>
+      <div id="word-info">Türkçesi: <span id="word-tr"></span><br>Example: <span id="word-example"></span></div>
+      <img id="word-image" src="" alt="" style="display:none;" />
+      <button onclick="iKnow()">I Know</button>
+      <button onclick="iDontKnow()">I Don't Know</button>
+    </section>
 
-  <div id="start-section" class="section">
-    <h2>Enter Player Names</h2>
-    <input id="player1" placeholder="Player 1 Name" />
-    <input id="player2" placeholder="Player 2 Name" />
-    <button class="btn" onclick="startGame()">Start Game</button>
-  </div>
-
-  <div id="category-section" class="section" style="display:none;">
-    <h2>Select a Category</h2>
-    <button class="btn" onclick="chooseCategory('Nature')">🌳 Nature</button>
-    <button class="btn" onclick="chooseCategory('Sports')">🏀 Sports</button>
-    <button class="btn" onclick="chooseCategory('Animals')">🐾 Animals</button>
-  </div>
-
-  <div id="game-section" class="section" style="display:none;">
-    <h2 id="player-turn"></h2>
-    <div id="word-box">Waiting for a word...</div>
-    <div id="word-info">Türkçesi: <span id="word-tr"></span><br>Örnek: <span id="word-example"></span></div>
-    <img id="word-image" src="" alt="Word Image" width="150" style="display: none; margin-top: 10px;" />
-    <br>
-    <button class="btn" onclick="iKnow()">✅ I Know</button>
-    <button class="btn" onclick="iDontKnow()">❌ I Don't Know</button>
-  </div>
-
-  <div id="add-word-section" class="section" style="position: fixed; bottom: 10px; left: 10px; width: 300px;">
-    <h2>Add a New Word</h2>
-    <input id="new-word" placeholder="English Word" /><br>
-    <input id="new-tr" placeholder="Turkish Meaning" /><br>
-    <input id="new-example" placeholder="Example Sentence" /><br>
-    <input id="new-img" placeholder="Image URL" /><br>
-    <select id="new-category">
-      <option value="">Select Category</option>
-      <option value="Nature">Nature</option>
-      <option value="Sports">Sports</option>
-      <option value="Animals">Animals</option>
-    </select>
-    <button class="btn" onclick="addWordToFirebase()">Add Word</button>
-  </div>
+    <section id="add-word-section" class="section">
+      <h2>Add New Word</h2>
+      <input id="new-word" placeholder="English Word" />
+      <input id="new-tr" placeholder="Turkish Meaning" />
+      <input id="new-example" placeholder="Example Sentence" />
+      <input id="new-img" placeholder="Image URL" />
+      <select id="new-category">
+        <option value="">Select Category</option>
+        <option value="Nature">Nature</option>
+        <option value="Sports">Sports</option>
+        <option value="Animals">Animals</option>
+      </select>
+      <button onclick="addWordToFirebase()">Add Word</button>
+    </section>
+  </main>
 
 <script>
-    let playerNames = ['', ''];
+  let playerNames = [];
+  let currentPlayer = 0;
+  let jokers = 3;
+  let scores = [0,0];
+  const words = {
+    Nature: [
+      {word:'Tree', tr:'Ağaç', example:'A tall tree.', img:''},
+      // ...
+    ],
+    Sports: [/* ... */],
+    Animals: [/* ... */]
+  };
+  let currentCategory = '';
+  let round = 0;
 
-    function startGame() {
-      const player1 = document.getElementById('player1').value.trim();
-      const player2 = document.getElementById('player2').value.trim();
+  function updateStatus() {
+    document.getElementById('scoreboard').innerText = `P1: ${scores[0]} | P2: ${scores[1]}`;
+    document.getElementById('joker-count').innerText = jokers;
+  }
 
-      if (!player1 || !player2) {
-        alert('Please enter both player names.');
-        return;
-      }
+  function startGame() {
+    const p1 = document.getElementById('player1').value;
+    const p2 = document.getElementById('player2').value;
+    if(!p1||!p2){alert('Enter both names');return;}
+    playerNames=[p1,p2];
+    document.getElementById('start-section').classList.add('hidden');
+    document.getElementById('category-section').classList.remove('hidden');
+    updateStatus();
+  }
 
-      playerNames[0] = player1;
-      playerNames[1] = player2;
+  function chooseCategory(cat) {
+    currentCategory = cat;
+    document.getElementById('category-section').classList.add('hidden');
+    document.getElementById('game-section').classList.remove('hidden');
+    nextWord();
+  }
 
-      document.getElementById('start-section').style.display = 'none';
-      document.getElementById('category-section').style.display = 'block';
+  function nextWord() {
+    if(round>=10){alert('Game Over');return;}
+    round++;
+    const list = words[currentCategory];
+    const w = list[Math.floor(Math.random()*list.length)];
+    document.getElementById('player-turn').innerText = `${playerNames[currentPlayer]}'s turn`;
+    document.getElementById('word-box').innerText = w.word;
+    document.getElementById('word-tr').innerText = w.tr;
+    document.getElementById('word-example').innerText = w.example;
+    if(w.img){
+      const imgEl = document.getElementById('word-image');
+      imgEl.src = w.img;
+      imgEl.style.display='block';
     }
+  }
 
-    function chooseCategory(category) {
-      document.getElementById('category-section').style.display = 'none';
-      document.getElementById('game-section').style.display = 'block';
-      document.getElementById('player-turn').innerText = `Your turn: ${playerNames[0]}`;
-      document.getElementById('word-box').innerText = `Category: ${category}`;
-    }
-  </script>
-</body>
+  function iKnow() {
+    scores[currentPlayer]+=10;
+    nextTurn();
+  }
+
+  function iDontKnow() {
+    nextTurn();
+  }
+
+  function nextTurn() {
+    currentPlayer = 1-currentPlayer;
+    updateStatus();
+    nextWord();
+  }
+
+  function addWordToFirebase() {
+    // placeholder
+    alert('Feature coming soon');
+  }
+</script>
 </html>
