@@ -7,6 +7,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
+      background: url('https://i.imgur.com/3ZpR9th.jpg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Poppins', sans-serif;
+      color: #ffffff;
+      padding: 20px;
+      text-align: center;
       background: url('https://i.imgur.com/Qe6z8DI.jpg') no-repeat center center fixed;
       background-size: cover;
       font-family: 'Poppins', sans-serif;
@@ -34,12 +40,32 @@
       color: #ffde59;
     }
     .section {
+      background-color: rgba(50, 50, 50, 0.85);
+      padding: 20px;
+      margin-bottom: 15px;
+      border-radius: 12px;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
       background-color: rgba(0, 0, 0, 0.8);
       padding: 20px;
       margin-bottom: 15px;
       border-radius: 8px;
     }
     .btn {
+      background-color: #ff5733;
+      color: #ffffff;
+      padding: 12px 24px;
+      font-size: 1.1em;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      margin-top: 10px;
+      border-radius: 10px;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+    .btn:hover {
+      background-color: #c70039;
+      transform: scale(1.05);
+    }
       background-color: #ff5733;
       color: #ffffff;
       padding: 10px 20px;
@@ -99,5 +125,31 @@
     <button class="btn" onclick="addWordToFirebase()">Add Word</button>
   </div>
 
+<script>
+    let playerNames = ['', ''];
+
+    function startGame() {
+      const player1 = document.getElementById('player1').value.trim();
+      const player2 = document.getElementById('player2').value.trim();
+
+      if (!player1 || !player2) {
+        alert('Please enter both player names.');
+        return;
+      }
+
+      playerNames[0] = player1;
+      playerNames[1] = player2;
+
+      document.getElementById('start-section').style.display = 'none';
+      document.getElementById('category-section').style.display = 'block';
+    }
+
+    function chooseCategory(category) {
+      document.getElementById('category-section').style.display = 'none';
+      document.getElementById('game-section').style.display = 'block';
+      document.getElementById('player-turn').innerText = `Your turn: ${playerNames[0]}`;
+      document.getElementById('word-box').innerText = `Category: ${category}`;
+    }
+  </script>
 </body>
 </html>
