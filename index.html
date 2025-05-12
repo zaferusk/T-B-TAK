@@ -6,24 +6,35 @@
   <title>Word Machine</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       padding: 0;
       font-family: 'Poppins', sans-serif;
-      background: #f0f4f8;
+      background: linear-gradient(135deg, #ece9e6, #ffffff);
       color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
     header {
       background: #4facfe;
       background: linear-gradient(to right, #4facfe, #00f2fe);
-      padding: 20px;
-      text-align: center;
       color: #fff;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header div {
+      font-weight: 600;
     }
     main {
-      max-width: 600px;
+      flex: 1;
+      max-width: 500px;
+      width: 100%;
       margin: 20px auto;
-      padding: 0 20px;
+      padding: 0 15px;
     }
     .section {
       background: #fff;
@@ -32,11 +43,11 @@
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
-    .section.hidden { display: none; }
+    .hidden { display: none; }
     input, select, button {
-      width: calc(100% - 24px);
-      padding: 10px;
-      margin: 5px 0;
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
       font-size: 1em;
       border: 1px solid #ccc;
       border-radius: 4px;
@@ -47,27 +58,26 @@
       color: #fff;
       border: none;
       cursor: pointer;
-      transition: background 0.3s;
+      font-weight: 600;
+      transition: opacity 0.3s;
     }
-    button:hover {
-      background: #00f2fe;
-    }
-    #scoreboard, #joker-container {
-      display: inline-block;
-      margin: 0 10px;
-      font-weight: bold;
-    }
+    button:hover { opacity: 0.9; }
     #game-section img {
-      max-width: 100%;
+      width: 100%;
       height: auto;
+      border-radius: 4px;
       margin: 10px 0;
-      border-radius: 8px;
+    }
+    footer {
+      text-align: center;
+      padding: 10px;
+      font-size: 0.9em;
+      color: #888;
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>Word Machine</h1>
     <div id="scoreboard">P1: 0 | P2: 0</div>
     <div id="joker-container">Jokers: <span id="joker-count">3</span></div>
   </header>
@@ -80,19 +90,20 @@
     </section>
 
     <section id="category-section" class="section hidden">
-      <h2>Select a Category</h2>
-      <button onclick="chooseCategory('Nature')">Nature</button>
-      <button onclick="chooseCategory('Sports')">Sports</button>
-      <button onclick="chooseCategory('Animals')">Animals</button>
+      <h2>Select Category</h2>
+      <button onclick="chooseCategory('Nature')">🌳 Nature</button>
+      <button onclick="chooseCategory('Sports')">🏀 Sports</button>
+      <button onclick="chooseCategory('Animals')">🐾 Animals</button>
     </section>
 
     <section id="game-section" class="section hidden">
       <h2 id="player-turn">Player's Turn</h2>
-      <div id="word-box">Word will appear here</div>
+      <div id="word-box" style="font-size:1.5em; margin:15px 0;">Word will appear here</div>
       <div id="word-info">Türkçesi: <span id="word-tr"></span><br>Example: <span id="word-example"></span></div>
-      <img id="word-image" src="" alt="" style="display:none;" />
+      <img id="word-image" src="" alt="Word image" style="display:none;" />
       <button onclick="iKnow()">I Know</button>
       <button onclick="iDontKnow()">I Don't Know</button>
+      <button onclick="useJoker()">Use Joker</button>
     </section>
 
     <section id="add-word-section" class="section">
@@ -110,79 +121,85 @@
       <button onclick="addWordToFirebase()">Add Word</button>
     </section>
   </main>
+  <footer>Rounds: <span id="round-count">0</span> / 10</footer>
 
-<script>
-  let playerNames = [];
-  let currentPlayer = 0;
-  let jokers = 3;
-  let scores = [0,0];
-  const words = {
-    Nature: [
-      {word:'Tree', tr:'Ağaç', example:'A tall tree.', img:''},
-      // ...
-    ],
-    Sports: [/* ... */],
-    Animals: [/* ... */]
-  };
-  let currentCategory = '';
-  let round = 0;
+  <script>
+    let playerNames = [];
+    let currentPlayer = 0;
+    let jokers = [3,3];
+    let scores = [0,0];
+    let usedWords = [];
+    const maxRounds = 10;
+    let round = 0;
+    const words = {
+      Nature: [
+        {word:'Tree',tr:'Ağaç',example:'A tall tree stands in the park.',img:'https://i.imgur.com/1JtCd5Y.jpg'},
+        {word:'River',tr:'Nehir',example:'The river flows rapidly.',img:'https://i.imgur.com/7y5oDCY.jpg'}
+      ],
+      Sports: [
+        {word:'Football',tr:'Futbol',example:'I play football every weekend.',img:'https://i.imgur.com/3nJYAd7.jpg'},
+        {word:'Tennis',tr:'Tenis',example:'She won the tennis match.',img:'https://i.imgur.com/8QRmRrM.jpg'}
+      ],
+      Animals: [
+        {word:'Cat',tr:'Kedi',example:'The cat is sleeping.',img:'https://i.imgur.com/fgRsKZ3.jpg'},
+        {word:'Dog',tr:'Köpek',example:'A dog is barking loudly.',img:'https://i.imgur.com/Hjmh7Ud.jpg'}
+      ]
+    };
 
-  function updateStatus() {
-    document.getElementById('scoreboard').innerText = `P1: ${scores[0]} | P2: ${scores[1]}`;
-    document.getElementById('joker-count').innerText = jokers;
-  }
-
-  function startGame() {
-    const p1 = document.getElementById('player1').value;
-    const p2 = document.getElementById('player2').value;
-    if(!p1||!p2){alert('Enter both names');return;}
-    playerNames=[p1,p2];
-    document.getElementById('start-section').classList.add('hidden');
-    document.getElementById('category-section').classList.remove('hidden');
-    updateStatus();
-  }
-
-  function chooseCategory(cat) {
-    currentCategory = cat;
-    document.getElementById('category-section').classList.add('hidden');
-    document.getElementById('game-section').classList.remove('hidden');
-    nextWord();
-  }
-
-  function nextWord() {
-    if(round>=10){alert('Game Over');return;}
-    round++;
-    const list = words[currentCategory];
-    const w = list[Math.floor(Math.random()*list.length)];
-    document.getElementById('player-turn').innerText = `${playerNames[currentPlayer]}'s turn`;
-    document.getElementById('word-box').innerText = w.word;
-    document.getElementById('word-tr').innerText = w.tr;
-    document.getElementById('word-example').innerText = w.example;
-    if(w.img){
-      const imgEl = document.getElementById('word-image');
-      imgEl.src = w.img;
-      imgEl.style.display='block';
+    function updateStatus() {
+      document.getElementById('scoreboard').innerText = `P1: ${scores[0]} | P2: ${scores[1]}`;
+      document.getElementById('joker-count').innerText = jokers[currentPlayer];
+      document.getElementById('round-count').innerText = round;
     }
-  }
 
-  function iKnow() {
-    scores[currentPlayer]+=10;
-    nextTurn();
-  }
+    function startGame() {
+      const p1 = document.getElementById('player1').value.trim();
+      const p2 = document.getElementById('player2').value.trim();
+      if (!p1 || !p2) { alert('Please enter both player names'); return; }
+      playerNames = [p1,p2];
+      document.getElementById('start-section').classList.add('hidden');
+      document.getElementById('category-section').classList.remove('hidden');
+      updateStatus();
+    }
 
-  function iDontKnow() {
-    nextTurn();
-  }
+    function chooseCategory(cat) {
+      currentCategory = cat;
+      usedWords = [];
+      round = 0;
+      document.getElementById('category-section').classList.add('hidden');
+      document.getElementById('game-section').classList.remove('hidden');
+      nextWord(); updateStatus();
+    }
 
-  function nextTurn() {
-    currentPlayer = 1-currentPlayer;
-    updateStatus();
-    nextWord();
-  }
+    function nextWord() {
+      if (round >= maxRounds) { alert('Game Over'); return; }
+      const list = words[currentCategory];
+      let w;
+      do {
+        w = list[Math.floor(Math.random()*list.length)];
+      } while (usedWords.includes(w.word) && usedWords.length < list.length);
+      usedWords.push(w.word);
+      round++;
+      document.getElementById('player-turn').innerText = `${playerNames[currentPlayer]}'s Turn`;
+      document.getElementById('word-box').innerText = w.word;
+      document.getElementById('word-tr').innerText = w.tr;
+      document.getElementById('word-example').innerText = w.example;
+      const imgEl = document.getElementById('word-image'); imgEl.src = w.img; imgEl.style.display = w.img?'block':'none';
+      updateStatus();
+    }
 
-  function addWordToFirebase() {
-    // placeholder
-    alert('Feature coming soon');
-  }
-</script>
+    function iKnow() { scores[currentPlayer] += 10; nextTurn(); }
+    function iDontKnow() { nextTurn(); }
+    function useJoker() {
+      if (jokers[currentPlayer] > 0) { jokers[currentPlayer]--; alert('Hint: '+document.getElementById('word-tr').innerText); updateStatus(); } else alert('No jokers left');
+    }
+
+    function nextTurn() {
+      currentPlayer = 1 - currentPlayer;
+      nextWord();
+    }
+
+    function addWordToFirebase() { alert('Feature coming soon'); }
+  </script>
+</body>
 </html>
