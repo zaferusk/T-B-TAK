@@ -40,6 +40,13 @@
       background-color: #e94560;
       transform: scale(1.05);
     }
+    #scoreboard, #joker-container {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #f8edeb;
+      border-radius: 8px;
+      display: inline-block;
+    }
   </style>
 </head>
 <body>
@@ -62,13 +69,19 @@
     <div id="word-box">Waiting for a word...</div>
     <button onclick="iKnow()">I Know</button>
     <button onclick="iDontKnow()">I Don't Know</button>
+    <div id="joker-container">Jokers: <span id="joker-count">3</span></div>
   </div>
+
+  <div id="scoreboard" style="display:none;">Player 1: 0 | Player 2: 0</div>
 
   <script>
     let playerNames = ['', ''];
     let currentPlayer = 0;
     let currentCategory = '';
     let usedWords = [];
+    let jokers = [3, 3];
+    let scores = [0, 0];
+
     let words = {
       'Nature': ['Tree', 'River', 'Mountain', 'Forest', 'Leaf'],
       'Sports': ['Football', 'Basketball', 'Tennis', 'Baseball', 'Swimming'],
@@ -89,6 +102,7 @@
 
       document.getElementById("category-section").style.display = "block";
       document.getElementById("game-section").style.display = "none";
+      document.getElementById("scoreboard").style.display = "block";
     }
 
     function chooseCategory(category) {
@@ -105,7 +119,7 @@
       const remainingWords = wordList.filter(word => !usedWords.includes(word));
 
       if (remainingWords.length === 0) {
-        alert("All words in this category have been used. Select a new category.");
+        alert("All words used. Choose a new category.");
         document.getElementById("category-section").style.display = "block";
         document.getElementById("game-section").style.display = "none";
         return;
@@ -117,13 +131,23 @@
     }
 
     function iKnow() {
-      alert(`Correct! ${playerNames[currentPlayer]} guessed the word.`);
+      scores[currentPlayer] += 10;
+      updateScoreboard();
       switchPlayer();
     }
 
     function iDontKnow() {
-      alert(`Wrong! The word was: ${document.getElementById("word-box").innerText}`);
       switchPlayer();
+    }
+
+    function useJoker() {
+      if (jokers[currentPlayer] > 0) {
+        jokers[currentPlayer]--;
+        alert(`Hint: The word starts with "${document.getElementById("word-box").innerText.charAt(0)}"`);
+      } else {
+        alert("No jokers left!");
+      }
+      updateJokerCount();
     }
 
     function switchPlayer() {
@@ -137,6 +161,14 @@
         document.getElementById("category-section").style.display = "block";
         document.getElementById("game-section").style.display = "none";
       }
+    }
+
+    function updateScoreboard() {
+      document.getElementById("scoreboard").innerText = `Player 1: ${scores[0]} | Player 2: ${scores[1]}`;
+    }
+
+    function updateJokerCount() {
+      document.getElementById("joker-count").innerText = jokers[currentPlayer];
     }
   </script>
 </body>
