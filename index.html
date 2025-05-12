@@ -47,6 +47,8 @@
   </script>
   <style>
     body {
+      background: url('https://i.imgur.com/Qe6z8DI.jpg') no-repeat center center fixed;
+      background-size: cover;
       font-family: 'Poppins', sans-serif;
       background-color: #2c3e50;
       color: #ecf0f1;
@@ -62,6 +64,12 @@
   </style>
 </head>
 <body>
+  <h1>🎯 Word Machine 🎯</h1>
+  <div>
+    <input id="player1" placeholder="Player 1 Name" />
+    <input id="player2" placeholder="Player 2 Name" />
+    <button onclick="startGame()">Start Game</button>
+  </div>
   <h1>Word Machine - Add New Word</h1>
   <div id="add-word-section">
     <h2>Add a New Word</h2>
@@ -77,5 +85,26 @@
     </select>
     <button onclick="addWordToFirebase()">Add Word</button>
   </div>
+
+
+  <div id="category-section" style="display:none;">
+    <h2>Select a Category:</h2>
+    <button onclick="chooseCategory('Nature')">🌳 Nature</button>
+    <button onclick="chooseCategory('Sports')">🏀 Sports</button>
+    <button onclick="chooseCategory('Animals')">🐾 Animals</button>
+  </div>
+
+  <div id="game-section" style="display:none;">
+    <h2 id="player-turn"></h2>
+    <div id="word-box">Waiting for a word...</div>
+    <img id="word-image" src="" alt="Word Image" width="150" style="display: none; margin-top: 10px;" />
+    <div id="word-info">Türkçesi: <span id="word-tr"></span><br>Örnek: <span id="word-example"></span></div>
+    <button onclick="iKnow()">✅ I Know</button>
+    <button onclick="iDontKnow()">❌ I Don't Know</button>
+    <div id="joker-container">Jokers: <span id="joker-count">3</span></div>
+  </div>
+
+  <div id="scoreboard">Player 1: 0 | Player 2: 0</div>
+
 </body>
 </html>
