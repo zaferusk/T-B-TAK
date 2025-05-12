@@ -67,15 +67,17 @@
   <script>
     let playerNames = ['', ''];
     let currentPlayer = 0;
+    let currentCategory = '';
+    let usedWords = [];
     let words = {
-      'Nature': ['Tree', 'River', 'Mountain'],
-      'Sports': ['Football', 'Basketball', 'Tennis'],
-      'Animals': ['Cat', 'Dog', 'Elephant']
+      'Nature': ['Tree', 'River', 'Mountain', 'Forest', 'Leaf'],
+      'Sports': ['Football', 'Basketball', 'Tennis', 'Baseball', 'Swimming'],
+      'Animals': ['Cat', 'Dog', 'Elephant', 'Lion', 'Tiger']
     };
 
     function startGame() {
-      const player1 = document.getElementById("player1").value;
-      const player2 = document.getElementById("player2").value;
+      const player1 = document.getElementById("player1").value.trim();
+      const player2 = document.getElementById("player2").value.trim();
 
       if (!player1 || !player2) {
         alert("Please enter both player names.");
@@ -84,37 +86,57 @@
 
       playerNames[0] = player1;
       playerNames[1] = player2;
+
       document.getElementById("category-section").style.display = "block";
       document.getElementById("game-section").style.display = "none";
     }
 
     function chooseCategory(category) {
+      currentCategory = category;
+      usedWords = [];
       document.getElementById("category-section").style.display = "none";
       document.getElementById("game-section").style.display = "block";
       document.getElementById("player-turn").innerText = `Your turn: ${playerNames[currentPlayer]}`;
-      displayWord(category);
+      displayWord();
     }
 
-    function displayWord(category) {
-      const wordList = words[category];
-      const randomIndex = Math.floor(Math.random() * wordList.length);
-      const selectedWord = wordList[randomIndex];
+    function displayWord() {
+      const wordList = words[currentCategory];
+      const remainingWords = wordList.filter(word => !usedWords.includes(word));
+
+      if (remainingWords.length === 0) {
+        alert("All words in this category have been used. Select a new category.");
+        document.getElementById("category-section").style.display = "block";
+        document.getElementById("game-section").style.display = "none";
+        return;
+      }
+
+      const selectedWord = remainingWords[Math.floor(Math.random() * remainingWords.length)];
+      usedWords.push(selectedWord);
       document.getElementById("word-box").innerText = selectedWord;
     }
 
     function iKnow() {
-      alert("Good job, " + playerNames[currentPlayer] + "!");
+      alert(`Correct! ${playerNames[currentPlayer]} guessed the word.`);
       switchPlayer();
     }
 
     function iDontKnow() {
-      alert("Better luck next time, " + playerNames[currentPlayer] + "!");
+      alert(`Wrong! The word was: ${document.getElementById("word-box").innerText}`);
       switchPlayer();
     }
 
     function switchPlayer() {
       currentPlayer = (currentPlayer + 1) % 2;
       document.getElementById("player-turn").innerText = `Your turn: ${playerNames[currentPlayer]}`;
+
+      if (usedWords.length < words[currentCategory].length) {
+        displayWord();
+      } else {
+        alert("All words used. Choose a new category.");
+        document.getElementById("category-section").style.display = "block";
+        document.getElementById("game-section").style.display = "none";
+      }
     }
   </script>
 </body>
