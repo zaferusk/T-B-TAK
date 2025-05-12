@@ -1,119 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Word Machine</title>
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyBiEB9J0OIr9hPGR_NB0U13wrjA0QBF7sk",
-      authDomain: "word-machine-547d3.firebaseapp.com",
-      projectId: "word-machine-547d3",
-      storageBucket: "word-machine-547d3.appspot.com",
-      messagingSenderId: "537964257136",
-      appId: "1:537964257136:web:045c49422b46541af1b9b5",
-      measurementId: "G-2ST0PGHT6K"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    window.addWordToFirebase = async function() {
-      const word = document.getElementById("new-word").value.trim();
-      const tr = document.getElementById("new-tr").value.trim();
-      const example = document.getElementById("new-example").value.trim();
-      const img = document.getElementById("new-img").value.trim();
-      const category = document.getElementById("new-category").value;
-
-      if (!word || !tr || !example || !img || !category) {
-        alert("Please fill all fields.");
-        return;
-      }
-
-      try {
-        await addDoc(collection(db, "words"), { word, tr, example, img, category });
-        alert("Word added successfully!");
-        document.getElementById("new-word").value = "";
-        document.getElementById("new-tr").value = "";
-        document.getElementById("new-example").value = "";
-        document.getElementById("new-img").value = "";
-      } catch (error) {
-        console.error("Error adding word: ", error);
-      }
-    };
-  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
       background: url('https://i.imgur.com/Qe6z8DI.jpg') no-repeat center center fixed;
       background-size: cover;
-      background: url('https://i.imgur.com/Qe6z8DI.jpg') no-repeat center center fixed;
-      background-size: cover;
       font-family: 'Poppins', sans-serif;
-      background-color: #2c3e50;
-      color: #ecf0f1;
+      color: #ffffff;
       padding: 20px;
       text-align: center;
     }
-    #add-word-section {
-      margin-top: 20px;
-      background-color: #34495e;
-      padding: 15px;
+    #scoreboard, #joker-container {
+      position: fixed;
+      padding: 10px 20px;
+      font-weight: bold;
       border-radius: 8px;
+      z-index: 1000;
+    }
+    #scoreboard {
+      top: 10px;
+      left: 10px;
+      background-color: #ff5733;
+      color: #ffffff;
+    }
+    #joker-container {
+      top: 10px;
+      right: 10px;
+      background-color: #34495e;
+      color: #ffde59;
+    }
+    .section {
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 20px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+    }
+    .btn {
+      background-color: #ff5733;
+      color: #ffffff;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      margin-top: 10px;
+      border-radius: 8px;
+    }
+    .btn:hover {
+      background-color: #c70039;
     }
   </style>
 </head>
 <body>
+
   <h1>🎯 Word Machine 🎯</h1>
-  <div style="margin-bottom: 20px;">
-    <input id="player1" placeholder="Player 1 Name" />
-    <input id="player2" placeholder="Player 2 Name" />
-    <button onclick="startGame()">Start Game</button>
-  </div>
-  <h1>Word Machine - Add New Word</h1>
-  <div id="add-word-section">
-    <h2>Add a New Word</h2>
-    <input id="new-word" placeholder="English Word" />
-    <input id="new-tr" placeholder="Turkish Meaning" />
-    <input id="new-example" placeholder="Example Sentence" />
-    <input id="new-img" placeholder="Image URL" />
-    <select id="new-category">
-      <option value="">Select Category</option>
-      <option value="Nature">Nature</option>
-      <option value="Sports">Sports</option>
-      <option value="Animals">Animals</option>
-    </select>
-    <button onclick="addWordToFirebase()">Add Word</button>
-  </div>
-
-
-  <div id="category-section" style="display:none;">
-    <h2>Select a Category:</h2>
-    <button onclick="chooseCategory('Nature')">🌳 Nature</button>
-    <button onclick="chooseCategory('Sports')">🏀 Sports</button>
-    <button onclick="chooseCategory('Animals')">🐾 Animals</button>
-  </div>
-
-  <div id="game-section" style="display:none;">
-    <h2 id="player-turn"></h2>
-    <div id="word-box">Waiting for a word...</div>
-    <img id="word-image" src="" alt="Word Image" width="150" style="display: none; margin-top: 10px;" />
-    <div id="word-info">Türkçesi: <span id="word-tr"></span><br>Örnek: <span id="word-example"></span></div>
-    <button onclick="iKnow()">✅ I Know</button>
-    <button onclick="iDontKnow()">❌ I Don't Know</button>
-    <div id="joker-container">Jokers: <span id="joker-count">3</span></div>
-  </div>
 
   <div id="scoreboard">Player 1: 0 | Player 2: 0</div>
+  <div id="joker-container">Jokers: <span id="joker-count">3</span></div>
 
+  <div id="start-section" class="section">
+    <h2>Enter Player Names</h2>
+    <input id="player1" placeholder="Player 1 Name" />
+    <input id="player2" placeholder="Player 2 Name" />
+    <button class="btn" onclick="startGame()">Start Game</button>
+  </div>
 
-  <div id="scoreboard" style="position: fixed; top: 10px; left: 10px; padding: 10px 20px; background-color: #ff5733; color: #ffffff; font-weight: bold; border-radius: 8px;">Player 1: 0 | Player 2: 0</div>
+  <div id="category-section" class="section" style="display:none;">
+    <h2>Select a Category</h2>
+    <button class="btn" onclick="chooseCategory('Nature')">🌳 Nature</button>
+    <button class="btn" onclick="chooseCategory('Sports')">🏀 Sports</button>
+    <button class="btn" onclick="chooseCategory('Animals')">🐾 Animals</button>
+  </div>
 
-  <div id="joker-container" style="position: fixed; top: 10px; right: 10px; padding: 10px 20px; background-color: #34495e; color: #ffde59; font-weight: bold; border-radius: 8px;">Jokers: <span id="joker-count">3</span></div>
+  <div id="game-section" class="section" style="display:none;">
+    <h2 id="player-turn"></h2>
+    <div id="word-box">Waiting for a word...</div>
+    <div id="word-info">Türkçesi: <span id="word-tr"></span><br>Örnek: <span id="word-example"></span></div>
+    <img id="word-image" src="" alt="Word Image" width="150" style="display: none; margin-top: 10px;" />
+    <br>
+    <button class="btn" onclick="iKnow()">✅ I Know</button>
+    <button class="btn" onclick="iDontKnow()">❌ I Don't Know</button>
+  </div>
 
-  <div id="add-word-section" style="position: fixed; bottom: 10px; left: 10px; padding: 15px; background-color: #34495e; color: #ffffff; border-radius: 8px;">
+  <div id="add-word-section" class="section">
     <h2>Add a New Word</h2>
     <input id="new-word" placeholder="English Word" />
     <input id="new-tr" placeholder="Turkish Meaning" />
@@ -125,7 +96,7 @@
       <option value="Sports">Sports</option>
       <option value="Animals">Animals</option>
     </select>
-    <button onclick="addWordToFirebase()">Add Word</button>
+    <button class="btn" onclick="addWordToFirebase()">Add Word</button>
   </div>
 
 </body>
