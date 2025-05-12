@@ -7,24 +7,27 @@
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #f3e7e9 0%, #e3eeff 100%);
-      color: #2d2d2d;
+      background: url('https://i.imgur.com/3ZpR9th.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #ffffff;
       padding: 20px;
       text-align: center;
     }
     h1 {
       font-size: 3em;
-      color: #4a47a3;
+      color: #ffde59;
       margin-bottom: 20px;
+      text-shadow: 2px 2px 4px #000000;
     }
     input, select {
       padding: 12px;
       border-radius: 8px;
-      border: 2px solid #4a47a3;
+      border: 2px solid #ffde59;
       margin: 5px;
       font-size: 1em;
       width: 200px;
-      transition: 0.3s;
+      background-color: #ffffff;
+      color: #2d2d2d;
     }
     button {
       padding: 12px 24px;
@@ -32,25 +35,27 @@
       border-radius: 8px;
       font-size: 18px;
       cursor: pointer;
-      background-color: #4a47a3;
+      background-color: #ff5733;
       color: #ffffff;
       transition: background-color 0.3s, transform 0.3s;
     }
     button:hover {
-      background-color: #e94560;
+      background-color: #c70039;
       transform: scale(1.05);
     }
     #scoreboard, #joker-container {
       margin-top: 20px;
       padding: 10px;
-      background-color: #f8edeb;
+      background-color: rgba(0, 0, 0, 0.5);
       border-radius: 8px;
       display: inline-block;
+      font-weight: bold;
+      color: #ffde59;
     }
   </style>
 </head>
 <body>
-  <h1>Word Machine</h1>
+  <h1>🎯 Word Machine 🎯</h1>
   <div>
     <input id="player1" placeholder="Player 1 Name" />
     <input id="player2" placeholder="Player 2 Name" />
@@ -59,16 +64,16 @@
 
   <div id="category-section" style="display:none;">
     <h2>Select a Category:</h2>
-    <button onclick="chooseCategory('Nature')">Nature</button>
-    <button onclick="chooseCategory('Sports')">Sports</button>
-    <button onclick="chooseCategory('Animals')">Animals</button>
+    <button onclick="chooseCategory('Nature')">🌳 Nature</button>
+    <button onclick="chooseCategory('Sports')">🏀 Sports</button>
+    <button onclick="chooseCategory('Animals')">🐾 Animals</button>
   </div>
 
   <div id="game-section" style="display:none;">
     <h2 id="player-turn"></h2>
     <div id="word-box">Waiting for a word...</div>
-    <button onclick="iKnow()">I Know</button>
-    <button onclick="iDontKnow()">I Don't Know</button>
+    <button onclick="iKnow()">✅ I Know</button>
+    <button onclick="iDontKnow()">❌ I Don't Know</button>
     <div id="joker-container">Jokers: <span id="joker-count">3</span></div>
   </div>
 
@@ -140,14 +145,8 @@
       switchPlayer();
     }
 
-    function useJoker() {
-      if (jokers[currentPlayer] > 0) {
-        jokers[currentPlayer]--;
-        alert(`Hint: The word starts with "${document.getElementById("word-box").innerText.charAt(0)}"`);
-      } else {
-        alert("No jokers left!");
-      }
-      updateJokerCount();
+    function updateScoreboard() {
+      document.getElementById("scoreboard").innerText = `Player 1: ${scores[0]} | Player 2: ${scores[1]}`;
     }
 
     function switchPlayer() {
@@ -161,14 +160,6 @@
         document.getElementById("category-section").style.display = "block";
         document.getElementById("game-section").style.display = "none";
       }
-    }
-
-    function updateScoreboard() {
-      document.getElementById("scoreboard").innerText = `Player 1: ${scores[0]} | Player 2: ${scores[1]}`;
-    }
-
-    function updateJokerCount() {
-      document.getElementById("joker-count").innerText = jokers[currentPlayer];
     }
   </script>
 </body>
