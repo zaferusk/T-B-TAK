@@ -1,124 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Word Machine</title>
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #f3e7e9 0%, #e3eeff 100%);
-      color: #2d2d2d;
-      padding: 20px;
-      text-align: center;
+<script>
+    let playerNames = ['', ''];
+    let currentPlayer = 0;
+
+    function startGame() {
+      const player1Name = document.getElementById('player1').value.trim();
+      const player2Name = document.getElementById('player2').value.trim();
+
+      if (!player1Name || !player2Name) {
+        alert('Please enter both player names to start the game.');
+        return;
+      }
+
+      playerNames[0] = player1Name;
+      playerNames[1] = player2Name;
+      document.getElementById('category-section').style.display = 'block';
+      document.getElementById('game-section').style.display = 'none';
     }
-    h1 {
-      font-size: 3em;
-      color: #4a47a3;
-      margin-bottom: 20px;
-    }
-    input, select {
-      padding: 12px;
-      border-radius: 8px;
-      border: 2px solid #4a47a3;
-      margin: 5px;
-      font-size: 1em;
-      width: 200px;
-      transition: 0.3s;
-    }
-    input:focus, select:focus {
-      border-color: #e94560;
-      outline: none;
-    }
-    button {
-      padding: 12px 24px;
-      border: none;
-      border-radius: 8px;
-      font-size: 18px;
-      cursor: pointer;
-      margin: 10px;
-      background-color: #4a47a3;
-      color: #ffffff;
-      transition: background-color 0.3s, transform 0.3s;
-    }
-    button:hover {
-      background-color: #e94560;
-      transform: scale(1.05);
-    }
-    #word-box {
-      font-size: 36px;
-      margin: 20px auto;
-      padding: 20px;
-      background: #ffffff;
-      border-radius: 16px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-      width: 60%;
-      transition: background-color 0.3s;
-    }
-    #word-box.correct {
-      background-color: #b2f7ef;
-    }
-    #word-box.incorrect {
-      background-color: #ffadad;
-    }
-    #timer {
-      font-size: 24px;
-      font-weight: bold;
-      color: #e94560;
-      margin-top: 10px;
-    }
-    #score-container {
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      background: #4a47a3;
-      padding: 12px 24px;
-      border-radius: 15px;
-      color: #ffffff;
-      font-weight: bold;
-      font-size: 16px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-  </style>
+</script>
 </head>
-<body>
-  <div id="score-container">Scoreboard: Player 1: 0 | Player 2: 0</div>
-  <h1>Word Machine</h1>
-  <div>
-    <input id="player1" placeholder="Player 1 Name" />
-    <input id="player2" placeholder="Player 2 Name" />
-    <button onclick="startGame()">Start Game</button>
-  </div>
-
-  <div id="category-section" style="display:none;">
-    <h2>Select a Category:</h2>
-    <button onclick="chooseCategory('Nature')">Nature</button>
-    <button onclick="chooseCategory('Sports')">Sports</button>
-    <button onclick="chooseCategory('Animals')">Animals</button>
-  </div>
-
-  <div id="game-section" style="display:none;">
-    <div id="player-turn"></div>
-    <div id="word-box">Waiting...</div>
-    <div id="timer">10</div>
-    <button onclick="iKnow()">I Know</button>
-    <button onclick="iDontKnow()">I Don't Know</button>
-    <button onclick="useJoker()">Use Joker</button>
-    <div id="extra-info"></div>
-  </div>
-
-  <div style="margin-top: 40px;">
-    <h2>Add New Word</h2>
-    <input id="new-word" placeholder="English Word" />
-    <input id="new-tr" placeholder="Turkish Meaning" />
-    <input id="new-example" placeholder="Example Sentence" />
-    <select id="new-category">
-      <option value="">Select Category</option>
-      <option value="Nature">Nature</option>
-      <option value="Sports">Sports</option>
-      <option value="Animals">Animals</option>
-    </select>
-    <button onclick="addWordToFirebase()">Add Word</button>
-  </div>
-</body>
-</html>
