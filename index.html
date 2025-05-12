@@ -49,6 +49,8 @@
     body {
       background: url('https://i.imgur.com/Qe6z8DI.jpg') no-repeat center center fixed;
       background-size: cover;
+      background: url('https://i.imgur.com/Qe6z8DI.jpg') no-repeat center center fixed;
+      background-size: cover;
       font-family: 'Poppins', sans-serif;
       background-color: #2c3e50;
       color: #ecf0f1;
@@ -65,7 +67,7 @@
 </head>
 <body>
   <h1>🎯 Word Machine 🎯</h1>
-  <div>
+  <div style="margin-bottom: 20px;">
     <input id="player1" placeholder="Player 1 Name" />
     <input id="player2" placeholder="Player 2 Name" />
     <button onclick="startGame()">Start Game</button>
@@ -105,6 +107,26 @@
   </div>
 
   <div id="scoreboard">Player 1: 0 | Player 2: 0</div>
+
+
+  <div id="scoreboard" style="position: fixed; top: 10px; left: 10px; padding: 10px 20px; background-color: #ff5733; color: #ffffff; font-weight: bold; border-radius: 8px;">Player 1: 0 | Player 2: 0</div>
+
+  <div id="joker-container" style="position: fixed; top: 10px; right: 10px; padding: 10px 20px; background-color: #34495e; color: #ffde59; font-weight: bold; border-radius: 8px;">Jokers: <span id="joker-count">3</span></div>
+
+  <div id="add-word-section" style="position: fixed; bottom: 10px; left: 10px; padding: 15px; background-color: #34495e; color: #ffffff; border-radius: 8px;">
+    <h2>Add a New Word</h2>
+    <input id="new-word" placeholder="English Word" />
+    <input id="new-tr" placeholder="Turkish Meaning" />
+    <input id="new-example" placeholder="Example Sentence" />
+    <input id="new-img" placeholder="Image URL" />
+    <select id="new-category">
+      <option value="">Select Category</option>
+      <option value="Nature">Nature</option>
+      <option value="Sports">Sports</option>
+      <option value="Animals">Animals</option>
+    </select>
+    <button onclick="addWordToFirebase()">Add Word</button>
+  </div>
 
 </body>
 </html>
