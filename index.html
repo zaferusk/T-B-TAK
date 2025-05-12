@@ -67,6 +67,11 @@
   <script>
     let playerNames = ['', ''];
     let currentPlayer = 0;
+    let words = {
+      'Nature': ['Tree', 'River', 'Mountain'],
+      'Sports': ['Football', 'Basketball', 'Tennis'],
+      'Animals': ['Cat', 'Dog', 'Elephant']
+    };
 
     function startGame() {
       const player1 = document.getElementById("player1").value;
@@ -87,7 +92,14 @@
       document.getElementById("category-section").style.display = "none";
       document.getElementById("game-section").style.display = "block";
       document.getElementById("player-turn").innerText = `Your turn: ${playerNames[currentPlayer]}`;
-      document.getElementById("word-box").innerText = "Word related to " + category;
+      displayWord(category);
+    }
+
+    function displayWord(category) {
+      const wordList = words[category];
+      const randomIndex = Math.floor(Math.random() * wordList.length);
+      const selectedWord = wordList[randomIndex];
+      document.getElementById("word-box").innerText = selectedWord;
     }
 
     function iKnow() {
